@@ -60,3 +60,27 @@ exports.postLoginUser = async (req, res) => {
     console.log(err);
   }
 };
+
+exports.postUpdateProfile = async (req, res) => {
+  try {
+    const { name, profile } = req.body;
+    const email = req.user.email;
+    const user = await User.findOne({ email });
+    user.name = name;
+    user.profile = profile;
+    user.save().then(() => {
+      res.json({ status: true, msg: "profile updated successfully", user });
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.isProfileUpdated = async (req, res) => {
+  const email = req.user.email;
+  const user = await User.findOne({ email });
+  if (user.name === "" && user.profile === "") {
+    return res.json({ status: false });
+  }
+  return res.json({ status: true });
+};
