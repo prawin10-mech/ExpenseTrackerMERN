@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 
 const Register = () => {
+  const [isVerified, setIsVerified] = useState(false);
   const navigate = useNavigate();
   const [values, setValues] = useState({
     email: "",
@@ -32,12 +33,26 @@ const Register = () => {
         values
       );
       if (data.status === true) {
-        navigate("/login");
+        setIsVerified(true);
         console.log(data.user);
       }
       if (data.status === false) {
         toast.error(data.msg, toastOptions);
       }
+    }
+  };
+
+  const verifiedUserHandler = async () => {
+    const { email, otp } = values;
+    const { data } = await axios.post("http://localhost:3000/verifyUser", {
+      otp: otp,
+      email,
+    });
+    if (data.status === true) {
+      toast.success("User Verified");
+      setTimeout(() => navigate("/login"), 1000);
+    } else {
+      toast.error(data.msg, toastOptions);
     }
   };
 
@@ -104,10 +119,35 @@ const Register = () => {
             onChange={(e) => handleChange(e)}
           />
         </Form.Group>
+        {isVerified && (
+          <Form.Group controlId="otp" className="mt-3">
+            <Form.Label>OTP: </Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter OTP"
+              name="otp"
+              onChange={(e) => handleChange(e)}
+            />
+          </Form.Group>
+        )}
         <div className="d-flex justify-content-center">
-          <Button variant="primary" type="submit" className="mt-3">
-            Register
-          </Button>
+          {isVerified && (
+            <Button
+              variant="primary"
+              className="mt-3"
+              onClick={verifiedUserHandler}
+            >
+              Verify
+            </Button>
+          )}
+        </div>
+
+        <div className="d-flex justify-content-center">
+          {!isVerified && (
+            <Button variant="primary" type="submit" className="mt-3">
+              Register
+            </Button>
+          )}
         </div>
 
         <p>
