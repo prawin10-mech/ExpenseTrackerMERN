@@ -1,7 +1,8 @@
 const User = require("../models/users");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-exports.postUser = async (req, res) => {
+exports.postRegisterUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const emailCheck = await User.findOne({ email });
@@ -21,7 +22,41 @@ exports.postUser = async (req, res) => {
         return res.status(200).json({ status: true, user });
       });
     }
-  } catch (ex) {
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const generateJwt = (email) => {
+  const token = jwt.sign({ email }, "secret");
+  return token;
+};
+
+exports.postLoginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const resultEmail = email.toLowerCase();
+    const user = await User.findOne({ email: resultEmail });
+    console.log(user);
+    if (!user) {
+      return res.json({ status: false, msg: "User Not Found Please Register" });
+    }
+    if (user) {
+      const passwordCheck = await bcrypt.compare(password, user.password);
+      if (!passwordCheck) {
+        return res.json({ status: false, msg: "Email or Password is Wrong" });
+      }
+      if (passwordCheck) {
+        const token = generateJwt(email);
+        return res.json({
+          status: true,
+          msg: "User successfully Logged in",
+          user,
+          token,
+        });
+      }
+    }
+  } catch (err) {
     console.log(err);
   }
 };

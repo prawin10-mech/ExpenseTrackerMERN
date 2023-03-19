@@ -73,12 +73,12 @@ const Register = () => {
 
   return (
     <Container className="w-25 h-100 bg-light m-auto mt-5">
-      <h1 className="text-center">LOGIN</h1>
+      <h1 className="text-center">REGISTER</h1>
       <Form onSubmit={formSubmitHandler}>
         <Form.Group controlId="email">
           <Form.Label>Email: </Form.Label>
           <Form.Control
-            type="text"
+            type="email"
             placeholder="Enter Email"
             name="email"
             onChange={(e) => handleChange(e)}
@@ -111,7 +111,7 @@ const Register = () => {
         </div>
 
         <p>
-          Already have an account ? <Link to="login">Login</Link>
+          Already have an account ? <Link to="/login">Login</Link>
         </p>
       </Form>
       <ToastContainer />
