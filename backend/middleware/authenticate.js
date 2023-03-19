@@ -5,9 +5,8 @@ exports.authenticate = async (req, res, next) => {
   try {
     const token = req.header("Authorization");
     const tokenUser = jwt.verify(token, "secret");
-
-    const user = await User.findOne({ email: tokenUser.email });
-
+    const email = tokenUser.email.toLowerCase();
+    const user = await User.findOne({ email });
     req.user = user;
     next();
   } catch (err) {

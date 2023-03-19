@@ -84,3 +84,10 @@ exports.isProfileUpdated = async (req, res) => {
   }
   return res.json({ status: true });
 };
+
+exports.getUserDetails = async (req, res) => {
+  const email = req.user.email;
+  const user = await User.findOne({ email });
+  console.log(user);
+  return res.json({ ...user });
+};

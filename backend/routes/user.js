@@ -18,4 +18,10 @@ router.get(
   userController.isProfileUpdated
 );
 
+router.get(
+  "/getUserDetails",
+  middlerware.authenticate,
+  userController.getUserDetails
+);
+
 module.exports = router;

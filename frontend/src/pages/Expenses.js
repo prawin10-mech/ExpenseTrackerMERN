@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import axios from "axios";
 
@@ -34,7 +33,7 @@ const Expenses = () => {
 
   useEffect(() => {
     isProfileUpdated();
-  });
+  }, []);
   return (
     <>
       <div className="w-100 d-flex justify-content-between border-bottom">
@@ -53,6 +52,12 @@ const Expenses = () => {
         {isCompleted && (
           <p className="rounded-pill border-primary bg-dark bg-gradient mt-auto border p-1 text-white">
             Profile completed 100%
+            <Button
+              className="btn-dark rounded-pill text-primary"
+              onClick={completeProfileHandle}
+            >
+              Edit Profile
+            </Button>
           </p>
         )}
       </div>

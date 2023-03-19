@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 
 const ProfileComplete = (props) => {
   const token = localStorage.getItem("token");
-  const [completed, setCompleted] = useState(false);
   const [values, setValues] = useState({
     name: "",
     profile: "",
@@ -33,7 +32,6 @@ const ProfileComplete = (props) => {
 
       if (data.status === true) {
         toast.success(data.msg, toastOptions);
-        setCompleted(true);
       }
 
       setTimeout(() => {
@@ -42,6 +40,21 @@ const ProfileComplete = (props) => {
       }, 8000);
     }
   };
+
+  const getUserData = async () => {
+    const { data } = await axios.get("http://localhost:3000/getUserDetails", {
+      headers: { Authorization: token },
+    });
+    console.log(data);
+    setValues({
+      name: data._doc.name,
+      profile: data._doc.profile,
+    });
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   const handlerValidation = () => {
     const { name, profile } = values;
@@ -55,7 +68,6 @@ const ProfileComplete = (props) => {
     }
     return true;
   };
-
   return (
     <div>
       <Container className="w-50 h-25 bg-light float-end">
@@ -73,6 +85,7 @@ const ProfileComplete = (props) => {
             <Form.Control
               type="text"
               name="name"
+              value={values.name}
               placeholder="Enter Full Name"
               onChange={(e) => handleChange(e)}
             />
@@ -82,17 +95,13 @@ const ProfileComplete = (props) => {
             <Form.Control
               type="text"
               name="profile"
+              value={values.profile}
               placeholder="Enter Profile Photo Url"
               onChange={(e) => handleChange(e)}
             />
           </Form.Group>
           <div className="d-flex justify-content-center">
-            <Button
-              variant="primary"
-              type="submit"
-              className="mt-3"
-              type="submit"
-            >
+            <Button variant="primary" type="submit" className="mt-3">
               Update
             </Button>
           </div>

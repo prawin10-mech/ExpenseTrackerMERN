@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Expenses from "./pages/Expenses";
 import ProfileComplete from "./pages/Expenses";
+import Logout from "./components/Logout";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/expenses" element={<Expenses />}></Route>
           <Route path="/completeProfile" element={<ProfileComplete />}></Route>
         </Routes>
+        <Logout />
       </BrowserRouter>
     </div>
   );
