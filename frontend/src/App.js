@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Expenses from "./pages/Expenses";
 import ProfileComplete from "./pages/Expenses";
+import Verify from "./pages/Verify";
 import Logout from "./components/Logout";
 
 function App() {
