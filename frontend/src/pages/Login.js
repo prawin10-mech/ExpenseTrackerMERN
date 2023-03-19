@@ -74,6 +74,9 @@ const Login = () => {
               onChange={(e) => handleChange(e)}
             />
           </Form.Group>
+          <div className="text-decoration-none mt-2 text-center">
+            <Link to="/forgotPassword">Forgot Password</Link>
+          </div>
           <div className="d-flex justify-content-center">
             <Button variant="primary" type="submit" className="mt-3">
               Login

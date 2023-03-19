@@ -50,7 +50,7 @@ const Register = () => {
     });
     if (data.status === true) {
       toast.success("User Verified");
-      setTimeout(() => navigate("/login"), 1000);
+      setTimeout(() => navigate("/"), 1000);
     } else {
       toast.error(data.msg, toastOptions);
     }

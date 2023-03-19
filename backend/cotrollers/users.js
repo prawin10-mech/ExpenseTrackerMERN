@@ -161,3 +161,74 @@ exports.getUserDetails = async (req, res) => {
   console.log(user);
   return res.json({ ...user });
 };
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    const url = req.body.url;
+    const email = req.body.email;
+    const user = await User.findOne({ email: email });
+    user.isUpdated = false;
+    await sendPassowrdLinkMail(url, email);
+    user.save().then(() => {
+      return res.json({
+        status: true,
+        msg: "Reset link sent to your mail",
+        url,
+      });
+    });
+  } catch (err) {
+    return res.json({ status: false, msg: "Please try again later" });
+  }
+};
+
+const sendPassowrdLinkMail = (url, email) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "boppepraveen10@gmail.com",
+      pass: "lswxukljotprxdjc",
+    },
+  });
+  transporter.sendMail(
+    {
+      from: "expenseTracker@prawin.com",
+      to: email,
+      subject: "Your OTP for registration",
+      text: `Your Password Reset Link is `,
+      html: `<a href="${url}">Link</a> <p>This link will work only one time</p>`,
+    },
+    (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(`Email sent: ${info.response}`);
+      }
+    }
+  );
+};
+
+exports.updatePassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (user.isUpdated === false) {
+      const hash = await bcrypt.hash(password, 10);
+      user.password = hash;
+      user.isUpdated = true;
+      user.save().then(() => {
+        return res.json({
+          status: true,
+          msg: "Password Updated Successfully",
+          user,
+        });
+      });
+    } else {
+      return res.json({
+        status: false,
+        msg: "You are not authorized to change the password",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};

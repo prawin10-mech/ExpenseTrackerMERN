@@ -9,6 +9,7 @@ const UserSchema = new Schema({
   profile: { type: String },
   otp: { type: String, min: 4 },
   verified: { type: Boolean, default: false },
+  isUpdated: { type: Boolean, default: true },
 });
 
 module.exports = mongoose.model("User", UserSchema);
