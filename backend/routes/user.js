@@ -4,6 +4,8 @@ const middlerware = require("../middleware/authenticate");
 
 router.post("/register", userController.postRegisterUser);
 
+router.post("/verifyUser", userController.verifyUser);
+
 router.post("/login", userController.postLoginUser);
 
 router.post(
