@@ -1,29 +1,99 @@
 const User = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const speakeasy = require("speakeasy");
+const nodemailer = require("nodemailer");
 
+const sendOtp = (email) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "boppepraveen10@gmail.com",
+      pass: "lswxukljotprxdjc",
+    },
+  });
+
+  const secret = speakeasy.generateSecret({ length: 4 });
+  const otp = speakeasy.totp({
+    secret: secret.base32,
+    encoding: "base32",
+  });
+
+  transporter.sendMail(
+    {
+      from: "expenseTracker@prawin.com",
+      to: email,
+      subject: "Your OTP for registration",
+      text: `Your OTP is ${otp}`,
+    },
+    (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(`Email sent: ${info.response}`);
+      }
+    }
+  );
+  return otp;
+};
 exports.postRegisterUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     const emailCheck = await User.findOne({ email });
-    if (emailCheck) {
+    if (emailCheck && emailCheck.verified === true) {
       return res.json({
         msg: "Email already exists please try to Login",
         status: false,
       });
-    } else {
+    } else if (emailCheck && emailCheck.verified == false) {
       const hash = await bcrypt.hash(password, 10);
+      await User.deleteOne({ email });
       const user = new User({
         email,
         password: hash,
+        name: "",
+        profile: "",
       });
       delete user.password;
+      user.otp = await sendOtp(email);
+      user.save().then(() => {
+        return res.status(200).json({ status: true, user });
+      });
+    } else {
+      const hash = await bcrypt.hash(password, 10);
+      await User.deleteOne({ email });
+      const user = new User({
+        email,
+        password: hash,
+        name: "",
+        profile: "",
+      });
+      delete user.password;
+      user.otp = await sendOtp(email);
       user.save().then(() => {
         return res.status(200).json({ status: true, user });
       });
     }
   } catch (err) {
     console.log(err);
+  }
+};
+
+exports.verifyUser = async (req, res) => {
+  const { email, otp } = req.body;
+  const user = await User.findOne({ email: email });
+  if (user.otp === otp) {
+    user.verified = true;
+    user.save().then(() => {
+      return res.json({ status: true, user });
+    });
+  } else {
+    return res.json({
+      status: false,
+      user,
+      msg: "Incorrect OTP please provide valid OTP",
+    });
   }
 };
 
