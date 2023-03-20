@@ -11,8 +11,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 require("dotenv").config();
 
 const userRouter = require("./routes/user");
+const expenseRouter = require("./routes/expenses");
 
 app.use(userRouter);
+app.use(expenseRouter);
 
 mongoose.connect(process.env.MONGODB_URI).then(() => {
   app.listen(process.env.PORT, () => {

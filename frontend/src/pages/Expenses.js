@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import ProfileComplete from "./ProfileComplete";
+import Logout from "../components/Logout";
+import AddExpensses from "../components/AddExpenses";
+import useLoggedIn from "../utils/useLoggedIn";
+import ShowExpenses from "../components/ShowExpenses";
 
 const Expenses = () => {
   const token = localStorage.getItem("token");
   const [isClicked, setIsClicked] = useState(null);
   const [isCompleted, setIsCompleted] = useState(false);
+  const navigate = useNavigate();
+  const loggedIn = useLoggedIn();
 
   const completeProfileHandle = () => {
     setIsClicked(true);
@@ -32,8 +39,12 @@ const Expenses = () => {
   };
 
   useEffect(() => {
+    // if (!loggedIn) {
+    //   navigate("/");
+    // }
     isProfileUpdated();
   }, []);
+
   return (
     <>
       <div className="w-100 d-flex justify-content-between border-bottom">
@@ -61,9 +72,12 @@ const Expenses = () => {
           </p>
         )}
       </div>
+      <AddExpensses />
       {isClicked && (
         <ProfileComplete onClose={handleClose} onComplete={handleComplete} />
       )}
+      <ShowExpenses />
+      <Logout />
     </>
   );
 };

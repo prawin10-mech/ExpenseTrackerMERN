@@ -30,6 +30,6 @@ router.post("/forgotPassword", userController.forgotPassword);
 
 // router.post("/generateNewPasswordLink/:id", userController.newPasswordUpdate);
 
-router.post("/updatePassword", userController.updatePassword);
+router.post("/updatePassword/:token/:id", userController.updatePassword);
 
 module.exports = router;

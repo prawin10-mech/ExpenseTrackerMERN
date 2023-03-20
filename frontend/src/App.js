@@ -7,9 +7,9 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Expenses from "./pages/Expenses";
 import ProfileComplete from "./pages/Expenses";
-import Logout from "./components/Logout";
 import ForgotPassword from "./pages/ForgotPassword";
 import NewPasswordUpdate from "./pages/NewPasswordUpdate";
+import useLoggedIn from "./utils/useLoggedIn";
 
 function App() {
   return (
@@ -18,7 +18,9 @@ function App() {
         <Routes>
           <Route path="/register" exact element={<Register />}></Route>
           <Route path="/" element={<Login />}></Route>
-          <Route path="/expenses" exact element={<Expenses />}></Route>
+
+          <Route path="/expenses" element={<Expenses />}></Route>
+
           <Route
             path="/completeProfile"
             exact
@@ -30,11 +32,10 @@ function App() {
             element={<ForgotPassword />}
           ></Route>
           <Route
-            path="/newPasswordUpdate/:email"
+            path="/newPasswordUpdate/:token/:id"
             element={<NewPasswordUpdate />}
           ></Route>
         </Routes>
-        <Logout />
       </BrowserRouter>
     </div>
   );

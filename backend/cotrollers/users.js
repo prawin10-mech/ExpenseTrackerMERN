@@ -1,41 +1,11 @@
 const User = require("../models/users");
+const Token = require("../models/token");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const speakeasy = require("speakeasy");
-const nodemailer = require("nodemailer");
+const crypto = require("crypto");
+const sendOtp = require("../utils/sendOtp");
+const generateJwt = require("../utils/generateJwt");
+const sendPassowrdLinkMail = require("../utils/sendPassowrdLinkMail");
 
-const sendOtp = (email) => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "boppepraveen10@gmail.com",
-      pass: "lswxukljotprxdjc",
-    },
-  });
-
-  const secret = speakeasy.generateSecret({ length: 4 });
-  const otp = speakeasy.totp({
-    secret: secret.base32,
-    encoding: "base32",
-  });
-
-  transporter.sendMail(
-    {
-      from: "expenseTracker@prawin.com",
-      to: email,
-      subject: "Your OTP for registration",
-      text: `Your OTP is ${otp}`,
-    },
-    (error, info) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log(`Email sent: ${info.response}`);
-      }
-    }
-  );
-  return otp;
-};
 exports.postRegisterUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -97,11 +67,6 @@ exports.verifyUser = async (req, res) => {
   }
 };
 
-const generateJwt = (email) => {
-  const token = jwt.sign({ email }, "secret");
-  return token;
-};
-
 exports.postLoginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -158,15 +123,15 @@ exports.isProfileUpdated = async (req, res) => {
 exports.getUserDetails = async (req, res) => {
   const email = req.user.email;
   const user = await User.findOne({ email });
-  console.log(user);
   return res.json({ ...user });
 };
 
 exports.forgotPassword = async (req, res) => {
   try {
-    const url = req.body.url;
     const email = req.body.email;
     const user = await User.findOne({ email: email });
+    const token = crypto.randomBytes(32).toString("hex");
+    const url = `http://localhost:3001/newPasswordUpdate/${token}/${user.id}`;
     user.isUpdated = false;
     await sendPassowrdLinkMail(url, email);
     user.save().then(() => {
@@ -181,36 +146,11 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
-const sendPassowrdLinkMail = (url, email) => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "boppepraveen10@gmail.com",
-      pass: "lswxukljotprxdjc",
-    },
-  });
-  transporter.sendMail(
-    {
-      from: "expenseTracker@prawin.com",
-      to: email,
-      subject: "Your OTP for registration",
-      text: `Your Password Reset Link is `,
-      html: `<a href="${url}">Link</a> <p>This link will work only one time</p>`,
-    },
-    (error, info) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log(`Email sent: ${info.response}`);
-      }
-    }
-  );
-};
-
 exports.updatePassword = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const { id, password } = req.body;
+    const user = await User.findById(id);
+    console.log(user.isUpdated);
     if (user.isUpdated === false) {
       const hash = await bcrypt.hash(password, 10);
       user.password = hash;

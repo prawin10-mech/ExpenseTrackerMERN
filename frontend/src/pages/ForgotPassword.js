@@ -3,9 +3,14 @@ import { Form, Button, Container } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import useEmailValid from "../utils/useEmailValid";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+
+  const handleChange = (e) => {
+    setEmail(e.target.value);
+  };
 
   const toastOptions = {
     position: "bottom-right",
@@ -15,17 +20,14 @@ const ForgotPassword = () => {
     theme: "dark",
   };
 
-  const handleChange = (e) => {
-    setEmail(e.target.value);
-  };
+  const validateHandler = useEmailValid(email);
 
   const forgotPasswordHandler = async (e) => {
     e.preventDefault();
-    if (validateHandler()) {
+    if (validateHandler) {
       const { data } = await axios.post(
         "http://localhost:3000/forgotPassword",
         {
-          url: `http://localhost:3001/newPasswordUpdate/${email}`,
           email,
         }
       );
@@ -36,16 +38,6 @@ const ForgotPassword = () => {
         toast.error(data.msg, toastOptions);
       }
     }
-  };
-
-  const validateHandler = () => {
-    const emailRegex = /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/;
-
-    if (!emailRegex.test(email)) {
-      toast.error("Please enter valid Email address", toastOptions);
-      return false;
-    }
-    return true;
   };
 
   return (

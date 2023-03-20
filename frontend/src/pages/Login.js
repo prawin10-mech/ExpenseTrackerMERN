@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Button, Container } from "react-bootstrap";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import useLoggedIn from "../utils/useLoggedIn";
 
 const Login = () => {
   const navigate = useNavigate();
+  const isLoggedIn = useLoggedIn();
+
   const [values, setValues] = useState({ email: "", password: "" });
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -32,6 +35,7 @@ const Login = () => {
       }
     }
   };
+
   const handlerValidation = () => {
     const { email, password } = values;
     const emailRegex = /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/;
@@ -51,6 +55,7 @@ const Login = () => {
     }
     return true;
   };
+
   return (
     <>
       <Container className="w-25 h-100 bg-light m-auto mt-5">

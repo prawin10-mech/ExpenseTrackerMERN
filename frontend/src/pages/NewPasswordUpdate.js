@@ -7,7 +7,7 @@ import axios from "axios";
 const NewPasswordUpdate = () => {
   const navigate = useNavigate();
   const [values, setValues] = useState({ password: "", confirmPassword: "" });
-  const { email } = useParams();
+  const { id, token } = useParams();
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -25,8 +25,8 @@ const NewPasswordUpdate = () => {
     e.preventDefault();
     if (validateHandler()) {
       const { data } = await axios.post(
-        "http://localhost:3000/updatePassword",
-        { email, password: values.password }
+        `http://localhost:3000/updatePassword/${token}/${id}`,
+        { id, password: values.password }
       );
       if (data.status) {
         toast.success(data.msg, toastOptions);

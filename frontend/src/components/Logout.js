@@ -11,7 +11,7 @@ const Logout = () => {
   const logoutHandle = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
-    navigate("/login");
+    navigate("/");
   };
   useEffect(() => {
     if (token) {
