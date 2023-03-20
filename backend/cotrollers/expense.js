@@ -8,7 +8,7 @@ exports.postNewExpense = async (req, res) => {
 
     const expense = new Expense({ userId, amount, description, category });
     expense.save().then(() => {
-      res.json({ status: true, user });
+      res.json({ status: true });
     });
   } catch (err) {
     console.log(err);
@@ -20,6 +20,25 @@ exports.getExpenses = async (req, res) => {
     const id = req.user.id;
     const expense = await Expense.find({ userId: id });
     res.json({ status: true, expense });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.deleteExpense = async (req, res) => {
+  try {
+    const id = req.body.id;
+    const expense = await Expense.deleteOne({ _id: id });
+    res.json({ status: true, expense, msg: "Expense Deleted" });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.editExpense = async (req, res) => {
+  try {
+    const { amount } = req.body;
+    console.log(amount);
   } catch (err) {
     console.log(err);
   }

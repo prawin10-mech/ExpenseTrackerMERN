@@ -10,4 +10,8 @@ router.post(
 
 router.get("/expenses", middleware.authenticate, ExpenseController.getExpenses);
 
+router.post("/deleteExpense", ExpenseController.deleteExpense);
+
+router.post("/editExpense", ExpenseController.editExpense);
+
 module.exports = router;

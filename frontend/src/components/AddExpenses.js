@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Form, Container, Button, Dropdown } from "react-bootstrap";
 import axios from "axios";
 import useToken from "../utils/useToken";
-import useExpenses from "../utils/useExpenses";
 
-const AddExpenses = () => {
+const AddExpenses = (props) => {
   const [values, setValues] = useState({
     amount: "",
     description: "",
@@ -40,9 +39,13 @@ const AddExpenses = () => {
 
   return (
     <>
-      {!isAddExpense && <Button onClick={showExpenseForm}>Add Expense</Button>}
+      {!isAddExpense && (
+        <Button onClick={showExpenseForm} className="position-fixed">
+          Add Expense
+        </Button>
+      )}
       {isAddExpense && (
-        <div className="bg-dark w-25 bg-opacity-25 ">
+        <div className="position-fixed bg-dark w-25 bg-opacity-25 ">
           <Button className="btn-danger" onClick={closeAddExpenseForm}>
             X
           </Button>
@@ -71,7 +74,7 @@ const AddExpenses = () => {
               <Form.Group className="w-25 mb-3" style={{ width: "500px" }}>
                 <Form.Label>Category: </Form.Label>
                 <Dropdown onSelect={handleSelect}>
-                  <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  <Dropdown.Toggle variant="light" id="dropdown-basic">
                     {values.category ? values.category : "Select a category"}
                   </Dropdown.Toggle>
 

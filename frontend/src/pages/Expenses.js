@@ -5,16 +5,15 @@ import { useNavigate } from "react-router-dom";
 
 import ProfileComplete from "./ProfileComplete";
 import Logout from "../components/Logout";
-import AddExpensses from "../components/AddExpenses";
+import AddExpenses from "../components/AddExpenses";
 import useLoggedIn from "../utils/useLoggedIn";
 import ShowExpenses from "../components/ShowExpenses";
 
 const Expenses = () => {
+  //const [expenses, setExpenses] = useState([]);
   const token = localStorage.getItem("token");
   const [isClicked, setIsClicked] = useState(null);
   const [isCompleted, setIsCompleted] = useState(false);
-  const navigate = useNavigate();
-  const loggedIn = useLoggedIn();
 
   const completeProfileHandle = () => {
     setIsClicked(true);
@@ -72,7 +71,7 @@ const Expenses = () => {
           </p>
         )}
       </div>
-      <AddExpensses />
+      <AddExpenses />
       {isClicked && (
         <ProfileComplete onClose={handleClose} onComplete={handleComplete} />
       )}

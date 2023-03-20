@@ -19,7 +19,7 @@ const Logout = () => {
     }
   }, []);
   return (
-    <div className="position-absolute bottom-0 float-right">
+    <div className="position-fixed bottom-0 float-right">
       {isLoggedIn && (
         <Button className="btn btn-light float-right" onClick={logoutHandle}>
           Logout
