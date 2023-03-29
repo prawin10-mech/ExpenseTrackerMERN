@@ -37,8 +37,14 @@ exports.deleteExpense = async (req, res) => {
 
 exports.editExpense = async (req, res) => {
   try {
-    const { amount } = req.body;
-    console.log(amount);
+    const { amount, description, category, _id } = req.body;
+    const expense = await Expense.findById(_id);
+    expense.amount = amount;
+    expense.description = description;
+    expense.category = category;
+    expense.save().then(() => {
+      res.json({ status: true, expense });
+    });
   } catch (err) {
     console.log(err);
   }

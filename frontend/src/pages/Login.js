@@ -4,10 +4,13 @@ import { Form, Button, Container } from "react-bootstrap";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import useLoggedIn from "../utils/useLoggedIn";
+import { useDispatch } from "react-redux";
+import { authActions } from "../components/store/Auth";
+import { expenseActions } from "../components/store/Expenses";
 
 const Login = () => {
   const navigate = useNavigate();
-  const isLoggedIn = useLoggedIn();
+  const dispatch = useDispatch();
 
   const [values, setValues] = useState({ email: "", password: "" });
   const handleChange = (e) => {
@@ -31,6 +34,9 @@ const Login = () => {
       }
       if (data.status === true) {
         localStorage.setItem("token", data.token);
+        dispatch(authActions.login());
+        dispatch(authActions.userToken({ token: data.token }));
+        //dispatch(expenseActions.checkExpenses());
         navigate("/expenses");
       }
     }

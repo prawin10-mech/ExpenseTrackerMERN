@@ -1,41 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import axios from "axios";
-import AddExpenses from "./AddExpenses";
+import AddExpenseForm from "./AddExpenseForm";
 
-const ExpenseCard = (props) => {
-  // const [isEdit, setIsEdit] = useState(false);
-  // const expenseEditHandler = async () => {
-  //   const { data } = await axios.post("http://localhost:3000/editExpense", {
-  //     amount: 10,
-  //   });
-  //   props.onEdit();
-  // };
+const ExpenseCard = React.memo((props) => {
+  const [showEditForm, setShowEditForm] = useState(false);
 
-  // const expenseEditHandler = async () => {
-  //   setIsEdit(true);
-  // };
+  const expenseEditHandler = useCallback(() => {
+    setShowEditForm(true);
+  }, []);
 
-  const expenseDeleteHandler = async () => {
+  const expenseDeleteHandler = useCallback(async () => {
     const { data } = await axios.post("http://localhost:3000/deleteExpense", {
       id: props.expense._id,
     });
     props.onDelete();
-  };
+  }, [props]);
+
+  const closeExpenseForm = useCallback(() => {
+    setShowEditForm(false);
+  }, []);
   return (
     <>
       <div key={props.expense._id} className="d-flex ">
         <h3>{props.expense.amount}-</h3>
         <h3>{props.expense.description}-</h3>
         <h3>{props.expense.category}</h3>
-        {/* <button className="rounded" onClick={expenseEditHandler}>
+        <button className="rounded" onClick={expenseEditHandler}>
           Edit
-        </button> */}
+        </button>
         <button className="rounded" onClick={expenseDeleteHandler}>
           Delete
         </button>
+        {showEditForm && (
+          <AddExpenseForm
+            expense={props.expense}
+            onClose={closeExpenseForm}
+            onEdit={props.onEdit}
+          />
+        )}
       </div>
     </>
   );
-};
+});
 
 export default ExpenseCard;

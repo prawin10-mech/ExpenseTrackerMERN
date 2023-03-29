@@ -1,0 +1,10 @@
+import { configureStore } from "@reduxjs/toolkit";
+import AuthReducer from "./Auth";
+import ExpenseReducer from "./Expenses";
+import FormReducer from "./FormControl";
+
+const store = configureStore({
+  reducer: { auth: AuthReducer, expense: ExpenseReducer, form: FormReducer },
+});
+
+export default store;

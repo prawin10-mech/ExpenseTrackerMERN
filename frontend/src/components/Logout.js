@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authActions } from "./store/Auth";
 
 const Logout = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const token = localStorage.getItem("token");
+  const dispatch = useDispatch(authActions);
 
   const navigate = useNavigate();
 
@@ -12,6 +15,7 @@ const Logout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     navigate("/");
+    dispatch(authActions.logout());
   };
   useEffect(() => {
     if (token) {

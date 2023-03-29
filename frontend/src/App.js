@@ -9,11 +9,12 @@ import Expenses from "./pages/Expenses";
 import ProfileComplete from "./pages/Expenses";
 import ForgotPassword from "./pages/ForgotPassword";
 import NewPasswordUpdate from "./pages/NewPasswordUpdate";
-import useLoggedIn from "./utils/useLoggedIn";
+import ParticlesBackground from "./components/ParticlesBackground";
 
 function App() {
   return (
     <div className="App">
+      <ParticlesBackground />
       <BrowserRouter>
         <Routes>
           <Route path="/register" exact element={<Register />}></Route>

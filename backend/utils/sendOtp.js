@@ -1,3 +1,4 @@
+const nodemailer = require("nodemailer");
 const speakeasy = require("speakeasy");
 
 const sendOtp = (email) => {
