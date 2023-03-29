@@ -2,7 +2,7 @@ const Particle = {
   autoPlay: true,
   background: {
     color: {
-      value: "#000",
+      value: "#fff",
     },
     image: "",
     position: "",

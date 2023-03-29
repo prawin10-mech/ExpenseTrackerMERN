@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import ProfileComplete from "./ProfileComplete";
 import Logout from "../components/Logout";
@@ -10,13 +10,16 @@ import ShowExpenses from "../components/ShowExpenses";
 import store from "../components/store";
 import PremiumBtn from "../components/premiumBtn";
 import { expenseActions } from "../components/store/Expenses";
+import DarkMode from "../components/DarkMode";
 
-const Expenses = (props) => {
+const Expenses = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
   const [isClicked, setIsClicked] = useState(null);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [premium, setPremium] = useState(false);
+  // const [premium, setPremium] = useState(false);
+  const premium = useSelector((state) => state.expense.premiumBtn);
+  const isPremium = useSelector((state) => state.premium.premiumUser);
 
   const completeProfileHandle = () => {
     setIsClicked(true);
@@ -26,18 +29,11 @@ const Expenses = (props) => {
     setIsClicked(false);
   };
 
-  dispatch(expenseActions.checkExpenses());
-
   const handleComplete = () => {
     setIsCompleted(true);
   };
 
-  const premiumHandler = () => {
-    console.log(premium);
-    console.log("A");
-    setPremium(store.getState().expense.premiumBtn);
-    console.log(premium);
-  };
+  dispatch(expenseActions.checkExpenses());
 
   const isProfileUpdated = async () => {
     const { data } = await axios.get("http://localhost:3000/isProfileUpdated", {
@@ -50,20 +46,17 @@ const Expenses = (props) => {
   };
 
   useEffect(() => {
-    premiumHandler();
-  }, [store.getState().expense.expenses]);
-
-  useEffect(() => {
     isProfileUpdated();
     console.log(store.getState());
   }, [isClicked]);
 
-  console.log(premium);
+  console.log(isPremium);
 
   return (
     <>
       <div className="w-100 d-flex justify-content-between border-bottom">
-        <h1 className="mr-auto text-white">EXPENSE TRACKER</h1>
+        <h1 className="text-danger mr-auto">EXPENSE TRACKER</h1>
+        {premium && isPremium && <DarkMode />}
 
         {!isCompleted && (
           <p className="rounded-pill border-primary bg-dark bg-gradient mt-auto border p-1 text-white">
@@ -92,13 +85,8 @@ const Expenses = (props) => {
       {isClicked && (
         <ProfileComplete onClose={handleClose} onComplete={handleComplete} />
       )}
-      <ShowExpenses onChange={premiumHandler} />
-      {premium && (
-        <>
-          {console.log("hello")}
-          <PremiumBtn />
-        </>
-      )}
+      <ShowExpenses />
+      {premium && <>{!isPremium && <PremiumBtn />}</>}
       <Logout />
     </>
   );

@@ -10,9 +10,7 @@ const FormSlice = createSlice({
       state.isOpened = true;
     },
     closed(state) {
-      console.log(state.isOpened);
       state.isOpened = false;
-      console.log(state.isOpened);
     },
   },
 });

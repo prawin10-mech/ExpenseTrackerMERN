@@ -40,6 +40,7 @@ const AddExpenseForm = (props) => {
         headers: { Authorization: token },
       });
       dispatch(expenseActions.addExpense({ item: { ...values } }));
+      dispatch(expenseActions.checkExpenses());
       setValues({ amount: "", description: "", category: "" });
       formRef.current.reset();
       props.onClose();

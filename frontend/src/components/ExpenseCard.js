@@ -21,7 +21,7 @@ const ExpenseCard = React.memo((props) => {
   }, []);
   return (
     <>
-      <div key={props.expense._id} className="d-flex ">
+      <div key={props.expense._id + "a"} className="d-flex ">
         <h3>{props.expense.amount}-</h3>
         <h3>{props.expense.description}-</h3>
         <h3>{props.expense.category}</h3>

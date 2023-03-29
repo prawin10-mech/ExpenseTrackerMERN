@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -12,6 +12,8 @@ import NewPasswordUpdate from "./pages/NewPasswordUpdate";
 import ParticlesBackground from "./components/ParticlesBackground";
 
 function App() {
+  const [dark, setDark] = useState();
+
   return (
     <div className="App">
       <ParticlesBackground />

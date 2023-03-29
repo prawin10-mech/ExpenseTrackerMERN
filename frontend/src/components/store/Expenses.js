@@ -32,7 +32,6 @@ const expenseSlice = createSlice({
         0
       );
       state.premiumBtn = amount >= 10000;
-      console.log(state.premiumBtn);
     },
   },
 });

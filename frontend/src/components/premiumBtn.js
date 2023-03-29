@@ -1,8 +1,11 @@
 import { Button } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { premiumActions } from "./store/premium";
 
 const PremiumBtn = () => {
+  const dispatch = useDispatch();
   const premiumBtnhandle = () => {
-    console.log("premium Btn clicked");
+    dispatch(premiumActions.isPremium());
   };
   return (
     <>

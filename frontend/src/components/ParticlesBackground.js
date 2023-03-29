@@ -1,11 +1,14 @@
 import { useCallback } from "react";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import ParticlesConfig from "./config/particle_config";
+import { useSelector } from "react-redux";
+import LightParticlesConfig from "./config/light_particle_config";
+import DarkParticlesConfig from "./config/dark_particle_config";
 
 const ParticlesBackground = () => {
+  const isPremiumUser = useSelector((state) => state.premium.isDark);
+
   const particlesInit = useCallback(async (engine) => {
-    console.log(engine);
     await loadFull(engine);
   }, []);
 
@@ -18,7 +21,7 @@ const ParticlesBackground = () => {
       id="tsparticles"
       init={particlesInit}
       loaded={particlesLoaded}
-      options={ParticlesConfig}
+      options={isPremiumUser ? DarkParticlesConfig : LightParticlesConfig}
     />
   );
 };

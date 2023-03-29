@@ -1,19 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import axios from "axios";
 import useToken from "../utils/useToken";
 import ExpenseCard from "./ExpenseCard";
 
-import store from "./store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { expenseActions } from "./store/Expenses";
 
 const ShowExpenses = (props) => {
   const dispatch = useDispatch();
 
-  const [expenses, setExpenses] = useState([
-    ...store.getState().expense.expenses,
-  ]);
-
+  const expenses = useSelector((state) => state.expense.expenses);
   const token = useToken();
   const getExpenses = useCallback(async () => {
     const { data } = await axios.get("http://localhost:3000/expenses", {
@@ -21,10 +17,8 @@ const ShowExpenses = (props) => {
         Authorization: token,
       },
     });
-    props.onChange();
     dispatch(expenseActions.allExpenses({ expenses: data.expense }));
     dispatch(expenseActions.checkExpenses());
-    setExpenses(store.getState().expense.expenses);
   }, []);
 
   useEffect(() => {
